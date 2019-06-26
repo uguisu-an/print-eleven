@@ -1,69 +1,7 @@
 <template>
   <div>
-    <div class="container" v-if="selectedObject">
-      <div class="form-row form-group">
-        <label for="x1" class="col-sm-3 col-form-label">x1</label>
-        <div class="col-sm-3">
-          <input
-            type="number"
-            id="x1"
-            class="form-control"
-            v-model.number="selectedObject.x1"
-          />
-        </div>
-        <label for="y1" class="col-sm-3 col-form-label">y1</label>
-        <div class="col-sm-3">
-          <input
-            type="number"
-            id="y1"
-            class="form-control"
-            v-model.number="selectedObject.y1"
-          />
-        </div>
-      </div>
-      <div class="form-row form-group">
-        <label for="x2" class="col-sm-3 col-form-label">x2</label>
-        <div class="col-sm-3">
-          <input
-            type="number"
-            id="x2"
-            class="form-control"
-            v-model.number="selectedObject.x2"
-          />
-        </div>
-        <label for="y2" class="col-sm-3 col-form-label">y2</label>
-        <div class="col-sm-3">
-          <input
-            type="number"
-            id="y2"
-            class="form-control"
-            v-model.number="selectedObject.y2"
-          />
-        </div>
-      </div>
-      <div class="form-row form-group">
-        <label for="stroke" class="col-sm-3 col-form-label">stroke</label>
-        <div class="col-sm-3">
-          <input
-            type="text"
-            id="stroke"
-            class="form-control"
-            v-model="selectedObject.stroke"
-          />
-        </div>
-        <label for="stroke-width" class="col-sm-3 col-form-label"
-          >stroke-width</label
-        >
-        <div class="col-sm-3">
-          <input
-            type="number"
-            id="stroke-width"
-            class="form-control"
-            v-model.number="selectedObject.strokeWidth"
-          />
-        </div>
-      </div>
-    </div>
+    <VLineControl :line="selectedObject" v-if="selectedObject" />
+
     <button class="btn btn-outline-primary rounded-circle" @click="addObject">
       +
     </button>
@@ -127,6 +65,7 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
+import VLineControl from "@/components/VLineControl.vue";
 
 interface BoundingBox {
   x: number;
@@ -144,7 +83,11 @@ interface LineObject {
   strokeWidth: number;
 }
 
-@Component
+@Component({
+  components: {
+    VLineControl
+  }
+})
 export default class TemplateEditor extends Vue {
   // items: BoundingBox[] = [];
   lines: LineObject[] = [];
