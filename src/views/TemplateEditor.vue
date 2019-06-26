@@ -1,10 +1,9 @@
 <template>
   <div>
-    <VLineControl :line="selectedObject" v-if="selectedObject" />
-
     <button class="btn btn-outline-primary rounded-circle" @click="addObject">
       +
     </button>
+    <VLineControl :line="selectedObject" v-if="selectedObject" />
     <v-canvas @mousemove="move" @mouseup="endMove" @mouseleave="cancelMove">
       <!-- <rect
         v-for="(item, i) in items"
@@ -16,49 +15,14 @@
         stroke="gray"
         stroke-width="3px"
       /> -->
-      <template v-for="(line, i) in lines">
-        <g :key="i">
-          <line
-            :x1="line.x1"
-            :y1="line.y1"
-            :x2="line.x2"
-            :y2="line.y2"
-            :stroke="line.stroke"
-            :stroke-width="line.strokeWidth"
-            marker-start="url(#marker-circle)"
-            marker-end="url(#marker-circle)"
-          />
-          <line
-            :x1="line.x1"
-            :y1="line.y1"
-            :x2="line.x2"
-            :y2="line.y2"
-            stroke="transparent"
-            :stroke-width="Math.max(line.strokeWidth, 15)"
-            @click="select(line)"
-          />
-          <template v-if="line === selectedObject">
-            <circle
-              :cx="line.x1"
-              :cy="line.y1"
-              r="5"
-              stroke="gray"
-              stroke-width="1"
-              fill="white"
-              @mousedown="moveStartPoint"
-            />
-            <circle
-              :cx="line.x2"
-              :cy="line.y2"
-              r="5"
-              stroke="gray"
-              stroke-width="1"
-              fill="white"
-              @mousedown="moveEndPoint"
-            />
-          </template>
-        </g>
-      </template>
+      <g v-for="(line, i) in lines" :key="i">
+        <VLineObject :line="line" @click="select" />
+        <VLineObjectHandle
+          :line="line"
+          @mousedown="movePoint"
+          v-if="line === selectedObject"
+        />
+      </g>
     </v-canvas>
   </div>
 </template>
@@ -66,6 +30,8 @@
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
 import VLineControl from "@/components/VLineControl.vue";
+import VLineObject from "@/components/VLineObject.vue";
+import VLineObjectHandle from "@/components/VLineObjectHandle.vue";
 
 interface BoundingBox {
   x: number;
@@ -85,7 +51,9 @@ interface LineObject {
 
 @Component({
   components: {
-    VLineControl
+    VLineControl,
+    VLineObject,
+    VLineObjectHandle
   }
 })
 export default class TemplateEditor extends Vue {
@@ -112,12 +80,20 @@ export default class TemplateEditor extends Vue {
     // });
   }
 
-  select(line: LineObject) {
+  select(_e: MouseEvent, line: LineObject) {
     this.selectedObject = line;
   }
 
   moveType = "";
   pointCached = { x: 0, y: 0 };
+
+  movePoint(_e: MouseEvent, p: "start" | "end") {
+    if (p === "start") {
+      this.moveStartPoint();
+    } else {
+      this.moveEndPoint();
+    }
+  }
 
   moveStartPoint() {
     console.info("move");
