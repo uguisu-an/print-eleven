@@ -1,18 +1,20 @@
 <template>
   <g>
-    <circle
-      :cx="line.x1"
-      :cy="line.y1"
-      r="5"
+    <rect
+      :x="line.x1 - 4"
+      :y="line.y1 - 4"
+      width="8"
+      height="8"
       stroke="gray"
       stroke-width="1"
       fill="white"
       @mousedown="mousedown($event, 'start')"
     />
-    <circle
-      :cx="line.x2"
-      :cy="line.y2"
-      r="5"
+    <rect
+      :x="line.x2 - 4"
+      :y="line.y2 - 4"
+      width="8"
+      height="8"
       stroke="gray"
       stroke-width="1"
       fill="white"
