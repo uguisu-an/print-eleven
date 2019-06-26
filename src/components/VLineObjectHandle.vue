@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
-import { LineObject } from "../types/objects";
+import { LineObject } from "@/types/object";
 
 @Component
 export default class VLineObjectHandle extends Vue {

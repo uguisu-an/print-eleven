@@ -29,25 +29,10 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
+import { LineObject } from "@/types/object";
 import VLineControl from "@/components/VLineControl.vue";
 import VLineObject from "@/components/VLineObject.vue";
 import VLineObjectHandle from "@/components/VLineObjectHandle.vue";
-
-interface BoundingBox {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-interface LineObject {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  stroke: string;
-  strokeWidth: number;
-}
 
 @Component({
   components: {
@@ -96,14 +81,12 @@ export default class TemplateEditor extends Vue {
   }
 
   moveStartPoint() {
-    console.info("move");
     if (!this.selectedObject) return;
     this.moveType = "start";
     this.pointCached = { x: this.selectedObject.x1, y: this.selectedObject.y1 };
   }
 
   moveEndPoint() {
-    console.info("move");
     if (!this.selectedObject) return;
     this.moveType = "end";
     this.pointCached = { x: this.selectedObject.x2, y: this.selectedObject.y2 };
@@ -121,13 +104,11 @@ export default class TemplateEditor extends Vue {
   }
 
   endMove() {
-    console.info("moved");
     if (!this.selectedObject) return;
     this.moveType = "";
   }
 
   cancelMove() {
-    console.info("canceled");
     if (!this.selectedObject) return;
     if (this.moveType === "start") {
       this.selectedObject.x1 = this.pointCached.x;
