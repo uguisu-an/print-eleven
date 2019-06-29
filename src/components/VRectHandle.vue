@@ -78,11 +78,11 @@ export default class VRectHandle extends Vue {
   }
 
   handleRightBottom() {
-    const w = this.rect.width;
-    const h = this.rect.height;
+    const X = this.rect.x;
+    const Y = this.rect.y;
     this.handle((x, y) => {
-      const width = w - (this.rect.x + w - x);
-      const height = h - (this.rect.y + h - y);
+      const width = x - X;
+      const height = y - Y;
       return { ...this.rect, width, height };
     });
   }
