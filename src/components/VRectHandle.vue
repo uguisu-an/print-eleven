@@ -1,6 +1,6 @@
 <template>
   <g>
-    <VHandle :x="leftTop.x" :y="leftTop.y" @mousedown="startMoveLeftTop" />
+    <VHandle :x="leftTop.x" :y="leftTop.y" @mousedown="handleLeftTop" />
     <VHandle :x="top.x" :y="top.y" />
     <VHandle :x="rightTop.x" :y="rightTop.y" />
     <VHandle :x="right.x" :y="right.y" />
@@ -65,18 +65,16 @@ export default class VRectHandle extends Vue {
     return { x: this.rect.x, y: this.rect.y + this.rect.height / 2 };
   }
 
-  startMoveLeftTop() {
-    this.$emit(
-      "handle",
-      (x: number, y: number) => ({
-        ...this.rect,
-        x,
-        y,
-        width: this.rect.width + (this.rect.x - x),
-        height: this.rect.height + (this.rect.y - y)
-      }),
-      { x: this.rect.x, y: this.rect.y }
-    );
+  handleLeftTop() {
+    this.handle((x, y) => {
+      const width = this.rect.width + (this.rect.x - x);
+      const height = this.rect.height + (this.rect.y - y);
+      return { ...this.rect, x, y, width, height };
+    });
+  }
+
+  handle(fn: (x: number, y: number) => RectDrawing) {
+    this.$emit("handle", fn, { x: this.rect.x, y: this.rect.y });
   }
 }
 </script>
