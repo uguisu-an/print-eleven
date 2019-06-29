@@ -4,7 +4,11 @@
     <VHandle :x="top.x" :y="top.y" />
     <VHandle :x="rightTop.x" :y="rightTop.y" />
     <VHandle :x="right.x" :y="right.y" />
-    <VHandle :x="rightBottom.x" :y="rightBottom.y" />
+    <VHandle
+      :x="rightBottom.x"
+      :y="rightBottom.y"
+      @mousedown="handleRightBottom"
+    />
     <VHandle :x="bottom.x" :y="bottom.y" />
     <VHandle :x="leftBottom.x" :y="leftBottom.y" />
     <VHandle :x="left.x" :y="left.y" />
@@ -70,6 +74,16 @@ export default class VRectHandle extends Vue {
       const width = this.rect.width + (this.rect.x - x);
       const height = this.rect.height + (this.rect.y - y);
       return { ...this.rect, x, y, width, height };
+    });
+  }
+
+  handleRightBottom() {
+    const w = this.rect.width;
+    const h = this.rect.height;
+    this.handle((x, y) => {
+      const width = w - (this.rect.x + w - x);
+      const height = h - (this.rect.y + h - y);
+      return { ...this.rect, width, height };
     });
   }
 
