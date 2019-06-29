@@ -22,11 +22,11 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
-import { LineObject } from "@/types/object";
+import { LineDrawing } from "@/models/line-drawing";
 
 @Component
 export default class VLineObject extends Vue {
-  @Prop({ required: true }) line!: LineObject;
+  @Prop({ required: true }) line!: LineDrawing;
 
   click(e: MouseEvent) {
     this.$emit("click", e, this.line);

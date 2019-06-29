@@ -1,8 +1,5 @@
 <template>
   <div>
-    <button class="btn btn-outline-primary rounded-circle" @click="addObject">
-      +
-    </button>
     <VLineControl :line="selectedObject" v-if="selectedObject" />
     <v-canvas @mousemove="move" @mouseup="endMove" @mouseleave="cancelMove">
       <!-- <rect
@@ -15,8 +12,8 @@
         stroke="gray"
         stroke-width="3px"
       /> -->
-      <g v-for="(line, i) in lines" :key="i">
-        <VLineObject :line="line" @click="select" />
+      <g v-for="(line, i) in drawings" :key="i">
+        <VLineObject :line="line" @click="select(line)" />
         <VLineObjectHandle
           :line="line"
           @mousedown="movePoint"
@@ -24,15 +21,17 @@
         />
       </g>
     </v-canvas>
+    {{ selectedObject }}
   </div>
 </template>
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
-import { LineObject } from "@/types/object";
 import VLineControl from "@/components/VLineControl.vue";
 import VLineObject from "@/components/VLineObject.vue";
 import VLineObjectHandle from "@/components/VLineObjectHandle.vue";
+import { LineDrawing } from "../models/line-drawing";
+import { Drawing } from "../models/drawing";
 
 @Component({
   components: {
@@ -42,31 +41,14 @@ import VLineObjectHandle from "@/components/VLineObjectHandle.vue";
   }
 })
 export default class TemplateEditor extends Vue {
-  // items: BoundingBox[] = [];
-  lines: LineObject[] = [];
-
-  selectedObject: LineObject | null = null;
-
-  addObject() {
-    this.lines.push({
-      x1: 10 * this.lines.length,
-      y1: 10,
-      x2: 100 + 15 * this.lines.length,
-      y2: 100,
-      stroke: "gray",
-      strokeWidth: 3
-    });
-    this.selectedObject = this.lines.slice(-1)[0];
-    // this.items.push({
-    //   x: 10 * this.items.length,
-    //   y: 100 * this.items.length,
-    //   width: 400,
-    //   height: 200
-    // });
+  get drawings() {
+    return this.$store.state.drawings;
   }
 
-  select(_e: MouseEvent, line: LineObject) {
-    this.selectedObject = line;
+  selectedObject: LineDrawing | null = null;
+
+  select(drawing: LineDrawing) {
+    this.selectedObject = drawing;
   }
 
   moveType = "";
