@@ -1,33 +1,20 @@
 <template>
   <g>
-    <rect
-      :x="line.x1 - 4"
-      :y="line.y1 - 4"
-      width="8"
-      height="8"
-      stroke="gray"
-      stroke-width="1"
-      fill="white"
-      @mousedown="startMoveStart"
-    />
-    <rect
-      :x="line.x2 - 4"
-      :y="line.y2 - 4"
-      width="8"
-      height="8"
-      stroke="gray"
-      stroke-width="1"
-      fill="white"
-      @mousedown="startMoveEnd"
-    />
+    <VHandle :x="line.x1" :y="line.y1" @mousedown="startMoveStart" />
+    <VHandle :x="line.x2" :y="line.y2" @mousedown="startMoveEnd" />
   </g>
 </template>
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
 import { LineDrawing } from "@/models/line-drawing";
+import VHandle from "@/components/VHandle.vue";
 
-@Component
+@Component({
+  components: {
+    VHandle
+  }
+})
 export default class VLineObjectHandle extends Vue {
   @Prop({ required: true }) line!: LineDrawing;
 
