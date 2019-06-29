@@ -10,7 +10,11 @@
       @mousedown="handleRightBottom"
     />
     <VHandle :x="bottom.x" :y="bottom.y" />
-    <VHandle :x="leftBottom.x" :y="leftBottom.y" />
+    <VHandle
+      :x="leftBottom.x"
+      :y="leftBottom.y"
+      @mousedown="handleLeftBottom"
+    />
     <VHandle :x="left.x" :y="left.y" />
   </g>
 </template>
@@ -76,8 +80,8 @@ export default class VRectHandle extends Vue {
     const W = this.rect.width;
     const H = this.rect.height;
     this.handle((x, y) => {
-      const width = W + (X - x);
-      const height = H + (Y - y);
+      const width = X + W - x;
+      const height = Y + H - y;
       return { ...this.rect, x, y, width, height };
     }, this.leftTop);
   }
@@ -88,7 +92,7 @@ export default class VRectHandle extends Vue {
     const H = this.rect.height;
     this.handle((x, y) => {
       const width = x - X;
-      const height = H + (Y - y);
+      const height = Y + H - y;
       return { ...this.rect, y, width, height };
     }, this.rightTop);
   }
@@ -101,6 +105,17 @@ export default class VRectHandle extends Vue {
       const height = y - Y;
       return { ...this.rect, width, height };
     }, this.rightBottom);
+  }
+
+  handleLeftBottom() {
+    const X = this.rect.x;
+    const Y = this.rect.y;
+    const W = this.rect.width;
+    this.handle((x, y) => {
+      const width = X + W - x;
+      const height = y - Y;
+      return { ...this.rect, x, width, height };
+    }, this.leftBottom);
   }
 
   handle(fn: (x: number, y: number) => RectDrawing, initial: Point) {
