@@ -2,7 +2,7 @@
   <g>
     <VHandle :x="leftTop.x" :y="leftTop.y" @mousedown="handleLeftTop" />
     <VHandle :x="top.x" :y="top.y" />
-    <VHandle :x="rightTop.x" :y="rightTop.y" />
+    <VHandle :x="rightTop.x" :y="rightTop.y" @mousedown="handleRightTop" />
     <VHandle :x="right.x" :y="right.y" />
     <VHandle
       :x="rightBottom.x"
@@ -19,6 +19,7 @@
 import { Prop, Component, Vue } from "vue-property-decorator";
 import { RectDrawing } from "@/models/rect-drawing";
 import VHandle from "./VHandle.vue";
+import Point from "../models/point";
 
 @Component({
   components: {
@@ -70,11 +71,26 @@ export default class VRectHandle extends Vue {
   }
 
   handleLeftTop() {
+    const X = this.rect.x;
+    const Y = this.rect.y;
+    const W = this.rect.width;
+    const H = this.rect.height;
     this.handle((x, y) => {
-      const width = this.rect.width + (this.rect.x - x);
-      const height = this.rect.height + (this.rect.y - y);
+      const width = W + (X - x);
+      const height = H + (Y - y);
       return { ...this.rect, x, y, width, height };
-    });
+    }, this.leftTop);
+  }
+
+  handleRightTop() {
+    const X = this.rect.x;
+    const Y = this.rect.y;
+    const H = this.rect.height;
+    this.handle((x, y) => {
+      const width = x - X;
+      const height = H + (Y - y);
+      return { ...this.rect, y, width, height };
+    }, this.rightTop);
   }
 
   handleRightBottom() {
@@ -84,11 +100,11 @@ export default class VRectHandle extends Vue {
       const width = x - X;
       const height = y - Y;
       return { ...this.rect, width, height };
-    });
+    }, this.rightBottom);
   }
 
-  handle(fn: (x: number, y: number) => RectDrawing) {
-    this.$emit("handle", fn, { x: this.rect.x, y: this.rect.y });
+  handle(fn: (x: number, y: number) => RectDrawing, initial: Point) {
+    this.$emit("handle", fn, initial);
   }
 }
 </script>
