@@ -16,7 +16,7 @@
         <VLineObject :line="line" @click="select(line)" />
         <VLineObjectHandle
           :line="line"
-          @mousedown="movePoint"
+          @start="startMove"
           v-if="line === selectedObject"
         />
       </g>
@@ -32,6 +32,8 @@ import VLineObject from "@/components/VLineObject.vue";
 import VLineObjectHandle from "@/components/VLineObjectHandle.vue";
 import { LineDrawing } from "../models/line-drawing";
 import { Drawing } from "../models/drawing";
+
+type MoveLine = (x: number, y: number) => LineDrawing;
 
 @Component({
   components: {
@@ -51,55 +53,30 @@ export default class TemplateEditor extends Vue {
     this.selectedObject = drawing;
   }
 
-  moveType = "";
+  moveLine?: MoveLine;
   pointCached = { x: 0, y: 0 };
 
-  movePoint(_e: MouseEvent, p: "start" | "end") {
-    if (p === "start") {
-      this.moveStartPoint();
-    } else {
-      this.moveEndPoint();
-    }
-  }
-
-  moveStartPoint() {
-    if (!this.selectedObject) return;
-    this.moveType = "start";
-    this.pointCached = { x: this.selectedObject.x1, y: this.selectedObject.y1 };
-  }
-
-  moveEndPoint() {
-    if (!this.selectedObject) return;
-    this.moveType = "end";
-    this.pointCached = { x: this.selectedObject.x2, y: this.selectedObject.y2 };
+  startMove(move: MoveLine, initial: { x: number; y: number }) {
+    this.pointCached = initial;
+    this.moveLine = move;
   }
 
   move(e: MouseEvent) {
     if (!this.selectedObject) return;
-    if (this.moveType === "start") {
-      this.selectedObject.x1 = e.offsetX;
-      this.selectedObject.y1 = e.offsetY;
-    } else if (this.moveType === "end") {
-      this.selectedObject.x2 = e.offsetX;
-      this.selectedObject.y2 = e.offsetY;
-    }
+    if (!this.moveLine) return;
+    Object.assign(this.selectedObject, this.moveLine(e.offsetX, e.offsetY));
   }
 
   endMove() {
-    if (!this.selectedObject) return;
-    this.moveType = "";
+    delete this.moveLine;
   }
 
   cancelMove() {
     if (!this.selectedObject) return;
-    if (this.moveType === "start") {
-      this.selectedObject.x1 = this.pointCached.x;
-      this.selectedObject.y1 = this.pointCached.y;
-    } else if (this.moveType === "end") {
-      this.selectedObject.x2 = this.pointCached.x;
-      this.selectedObject.y2 = this.pointCached.y;
-    }
-    this.moveType = "";
+    if (!this.moveLine) return;
+    const { x, y } = this.pointCached;
+    Object.assign(this.selectedObject, this.moveLine(x, y));
+    delete this.moveLine;
   }
 }
 </script>

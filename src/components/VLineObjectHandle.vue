@@ -8,7 +8,7 @@
       stroke="gray"
       stroke-width="1"
       fill="white"
-      @mousedown="mousedown($event, 'start')"
+      @mousedown="startMoveStart"
     />
     <rect
       :x="line.x2 - 4"
@@ -18,7 +18,7 @@
       stroke="gray"
       stroke-width="1"
       fill="white"
-      @mousedown="mousedown($event, 'end')"
+      @mousedown="startMoveEnd"
     />
   </g>
 </template>
@@ -31,8 +31,20 @@ import { LineDrawing } from "@/models/line-drawing";
 export default class VLineObjectHandle extends Vue {
   @Prop({ required: true }) line!: LineDrawing;
 
-  mousedown(e: MouseEvent, p: "start" | "end") {
-    this.$emit("mousedown", e, p);
+  startMoveStart() {
+    this.$emit(
+      "start",
+      (x: number, y: number) => ({ ...this.line, x1: x, y1: y }),
+      { x: this.line.x1, y: this.line.y1 }
+    );
+  }
+
+  startMoveEnd() {
+    this.$emit(
+      "start",
+      (x: number, y: number) => ({ ...this.line, x2: x, y2: y }),
+      { x: this.line.x2, y: this.line.y2 }
+    );
   }
 }
 </script>
