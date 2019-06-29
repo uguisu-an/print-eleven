@@ -1,27 +1,23 @@
 <template>
   <div>
+    {{ selectedObject }}
     <VLineControl :line="selectedObject" v-if="selectedObject" />
     <v-canvas @mousemove="move" @mouseup="endMove" @mouseleave="cancelMove">
-      <!-- <rect
-        v-for="(item, i) in items"
-        :key="i"
-        :x="item.x"
-        :y="item.y"
-        :width="item.width"
-        :height="item.height"
-        stroke="gray"
-        stroke-width="3px"
-      /> -->
-      <g v-for="(line, i) in drawings" :key="i">
-        <VLineObject :line="line" @click="select(line)" />
+      <g v-for="(d, i) in drawings" :key="i">
+        <VRectObject
+          :rect="d"
+          :selected="d === selectedObject"
+          @click="selectedObject = d"
+          @movestart="startMove"
+        />
+        <!-- <VLineObject :line="line" @click="select(line)" />
         <VLineObjectHandle
           :line="line"
           @start="startMove"
           v-if="line === selectedObject"
-        />
+        /> -->
       </g>
     </v-canvas>
-    {{ selectedObject }}
   </div>
 </template>
 
@@ -30,13 +26,15 @@ import { Prop, Component, Vue } from "vue-property-decorator";
 import VLineControl from "@/components/VLineControl.vue";
 import VLineObject from "@/components/VLineObject.vue";
 import VLineObjectHandle from "@/components/VLineObjectHandle.vue";
+import VRectObject from "@/components/VRectObject.vue";
 import { LineDrawing } from "../models/line-drawing";
 import { Drawing } from "../models/drawing";
 
-type MoveLine = (x: number, y: number) => LineDrawing;
+type Move = (x: number, y: number) => Drawing;
 
 @Component({
   components: {
+    VRectObject,
     VLineControl,
     VLineObject,
     VLineObjectHandle
@@ -53,30 +51,30 @@ export default class TemplateEditor extends Vue {
     this.selectedObject = drawing;
   }
 
-  moveLine?: MoveLine;
+  doMove?: Move;
   pointCached = { x: 0, y: 0 };
 
-  startMove(move: MoveLine, initial: { x: number; y: number }) {
+  startMove(move: Move, initial: { x: number; y: number }) {
     this.pointCached = initial;
-    this.moveLine = move;
+    this.doMove = move;
   }
 
   move(e: MouseEvent) {
     if (!this.selectedObject) return;
-    if (!this.moveLine) return;
-    Object.assign(this.selectedObject, this.moveLine(e.offsetX, e.offsetY));
+    if (!this.doMove) return;
+    Object.assign(this.selectedObject, this.doMove(e.offsetX, e.offsetY));
   }
 
   endMove() {
-    delete this.moveLine;
+    delete this.doMove;
   }
 
   cancelMove() {
     if (!this.selectedObject) return;
-    if (!this.moveLine) return;
+    if (!this.doMove) return;
     const { x, y } = this.pointCached;
-    Object.assign(this.selectedObject, this.moveLine(x, y));
-    delete this.moveLine;
+    Object.assign(this.selectedObject, this.doMove(x, y));
+    delete this.doMove;
   }
 }
 </script>

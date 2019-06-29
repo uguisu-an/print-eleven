@@ -12,7 +12,9 @@ interface RootState {
 
 export default new Vuex.Store<RootState>({
   state: {
-    drawings: []
+    drawings: [
+      new RectDrawing({ x: 10, y: 10, width: 100, height: 100, fill: "gray" })
+    ]
   },
   mutations: {
     addLine({ drawings }) {
