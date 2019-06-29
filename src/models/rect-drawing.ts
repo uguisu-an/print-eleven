@@ -29,6 +29,7 @@ export class RectDrawing implements Drawing {
     if (params.y) this.y = params.y;
     if (params.width) this.width = params.width;
     if (params.height) this.height = params.height;
+    if (params.fill) this.fill = params.fill;
     if (params.stroke) this.stroke = params.stroke;
     if (params.strokeWidth) this.strokeWidth = params.strokeWidth;
   }
