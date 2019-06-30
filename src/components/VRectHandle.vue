@@ -21,9 +21,10 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
+import Point from "@/models/point";
+import Rect from "@/models/rect";
 import { RectDrawing } from "@/models/rect-drawing";
 import VHandle from "./VHandle.vue";
-import Point from "../models/point";
 
 @Component({
   components: {
@@ -75,47 +76,35 @@ export default class VRectHandle extends Vue {
   }
 
   handleLeftTop() {
-    const X = this.rect.x;
-    const Y = this.rect.y;
-    const W = this.rect.width;
-    const H = this.rect.height;
-    this.handle((x, y) => {
-      const width = X + W - x;
-      const height = Y + H - y;
-      return { ...this.rect, x, y, width, height };
-    }, this.leftTop);
+    const rect = new Rect(this.rect);
+    this.handle(
+      (x, y) => ({ ...this.rect, ...rect.moveLeftTop({ x, y }) }),
+      this.leftTop
+    );
   }
 
   handleRightTop() {
-    const X = this.rect.x;
-    const Y = this.rect.y;
-    const H = this.rect.height;
-    this.handle((x, y) => {
-      const width = x - X;
-      const height = Y + H - y;
-      return { ...this.rect, y, width, height };
-    }, this.rightTop);
+    const rect = new Rect(this.rect);
+    this.handle(
+      (x, y) => ({ ...this.rect, ...rect.moveRightTop({ x, y }) }),
+      this.rightTop
+    );
   }
 
   handleRightBottom() {
-    const X = this.rect.x;
-    const Y = this.rect.y;
-    this.handle((x, y) => {
-      const width = x - X;
-      const height = y - Y;
-      return { ...this.rect, width, height };
-    }, this.rightBottom);
+    const rect = new Rect(this.rect);
+    this.handle(
+      (x, y) => ({ ...this.rect, ...rect.moveRightBottom({ x, y }) }),
+      this.rightBottom
+    );
   }
 
   handleLeftBottom() {
-    const X = this.rect.x;
-    const Y = this.rect.y;
-    const W = this.rect.width;
-    this.handle((x, y) => {
-      const width = X + W - x;
-      const height = y - Y;
-      return { ...this.rect, x, width, height };
-    }, this.leftBottom);
+    const rect = new Rect(this.rect);
+    this.handle(
+      (x, y) => ({ ...this.rect, ...rect.moveLeftBottom({ x, y }) }),
+      this.leftBottom
+    );
   }
 
   handle(fn: (x: number, y: number) => RectDrawing, initial: Point) {
