@@ -8,10 +8,10 @@ interface RectInput {
 }
 
 export default class Rect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  public readonly x: number;
+  public readonly y: number;
+  public readonly width: number;
+  public readonly height: number;
 
   public constructor(params: RectInput) {
     this.x = params.x;
@@ -21,38 +21,34 @@ export default class Rect {
   }
 
   public moveLeft({ x }: Point): Rect {
-    const right = this.x + this.width;
     return new Rect({
       ...this,
-      x: Math.min(right, x),
-      width: Math.abs(right - x)
+      x: Math.min(this.right, x),
+      width: Math.abs(this.right - x)
     });
   }
 
   public moveRight({ x }: Point): Rect {
-    const left = this.x;
     return new Rect({
       ...this,
-      x: Math.min(left, x),
-      width: Math.abs(x - left)
+      x: Math.min(this.left, x),
+      width: Math.abs(x - this.left)
     });
   }
 
   public moveTop({ y }: Point): Rect {
-    const bottom = this.y + this.height;
     return new Rect({
       ...this,
-      y: Math.min(bottom, y),
-      height: Math.abs(bottom - y)
+      y: Math.min(this.bottom, y),
+      height: Math.abs(this.bottom - y)
     });
   }
 
   public moveBottom({ y }: Point): Rect {
-    const top = this.y;
     return new Rect({
       ...this,
-      y: Math.min(top, y),
-      height: Math.abs(y - top)
+      y: Math.min(this.top, y),
+      height: Math.abs(y - this.top)
     });
   }
 
@@ -70,5 +66,21 @@ export default class Rect {
 
   public moveRightBottom(p: Point): Rect {
     return this.moveRight(p).moveBottom(p);
+  }
+
+  private get left(): number {
+    return this.x;
+  }
+
+  private get right(): number {
+    return this.x + this.width;
+  }
+
+  private get top(): number {
+    return this.y;
+  }
+
+  private get bottom(): number {
+    return this.y + this.height;
   }
 }
