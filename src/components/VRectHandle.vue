@@ -1,21 +1,21 @@
 <template>
   <g>
     <VHandle :x="leftTop.x" :y="leftTop.y" @mousedown="handleLeftTop" />
-    <VHandle :x="top.x" :y="top.y" />
+    <VHandle :x="top.x" :y="top.y" @mousedown="handleTop" />
     <VHandle :x="rightTop.x" :y="rightTop.y" @mousedown="handleRightTop" />
-    <VHandle :x="right.x" :y="right.y" />
+    <VHandle :x="right.x" :y="right.y" @mousedown="handleRight" />
     <VHandle
       :x="rightBottom.x"
       :y="rightBottom.y"
       @mousedown="handleRightBottom"
     />
-    <VHandle :x="bottom.x" :y="bottom.y" />
+    <VHandle :x="bottom.x" :y="bottom.y" @mousedown="handleBottom" />
     <VHandle
       :x="leftBottom.x"
       :y="leftBottom.y"
       @mousedown="handleLeftBottom"
     />
-    <VHandle :x="left.x" :y="left.y" />
+    <VHandle :x="left.x" :y="left.y" @mousedown="handleLeft" />
   </g>
 </template>
 
@@ -73,6 +73,38 @@ export default class VRectHandle extends Vue {
 
   get left() {
     return { x: this.rect.x, y: this.rect.y + this.rect.height / 2 };
+  }
+
+  handleLeft() {
+    const rect = new Rect(this.rect);
+    this.handle(
+      (x, y) => ({ ...this.rect, ...rect.moveLeft({ x, y }) }),
+      this.left
+    );
+  }
+
+  handleRight() {
+    const rect = new Rect(this.rect);
+    this.handle(
+      (x, y) => ({ ...this.rect, ...rect.moveRight({ x, y }) }),
+      this.right
+    );
+  }
+
+  handleTop() {
+    const rect = new Rect(this.rect);
+    this.handle(
+      (x, y) => ({ ...this.rect, ...rect.moveTop({ x, y }) }),
+      this.top
+    );
+  }
+
+  handleBottom() {
+    const rect = new Rect(this.rect);
+    this.handle(
+      (x, y) => ({ ...this.rect, ...rect.moveBottom({ x, y }) }),
+      this.bottom
+    );
   }
 
   handleLeftTop() {
