@@ -2,7 +2,7 @@
   <div>
     <!-- <VLineControl :line="selectedObject" v-if="selectedObject" /> -->
     <v-canvas @mousemove="move" @mouseup="endMove" @mouseleave="cancelMove">
-      <VObject
+      <v-object
         v-for="d in drawings"
         :key="d.id"
         :drawing="d"
@@ -16,14 +16,16 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
-import { Drawing } from "../models/drawing";
-import VObject from "../components/VObject.vue";
-import Scale from "../models/scale";
-import Point from "../models/point";
+import { Drawing } from "@/models/drawing";
+import Scale from "@/models/scale";
+import Point from "@/models/point";
+import VCanvas from "@/components/VCanvas.vue";
+import VObject from "@/components/VObject.vue";
 
 @Component({
   components: {
-    VObject
+    "v-canvas": VCanvas,
+    "v-object": VObject
   }
 })
 export default class TemplateEditor extends Vue {

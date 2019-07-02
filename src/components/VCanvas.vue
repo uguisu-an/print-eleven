@@ -14,6 +14,9 @@
   </svg>
 </template>
 
-<script>
-export default {};
+<script lang="ts">
+import { Prop, Component, Vue } from "vue-property-decorator";
+
+@Component({})
+export default class VCanvas extends Vue {}
 </script>

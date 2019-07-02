@@ -5,9 +5,6 @@ import store from "./store";
 
 import "./main.scss";
 
-import Canvas from "@/components/Canvas.vue";
-Vue.component("v-canvas", Canvas);
-
 Vue.config.productionTip = false;
 
 new Vue({
