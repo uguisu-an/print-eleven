@@ -3,9 +3,9 @@
     <button class="btn btn-outline-primary" @click="addLine">
       線を追加
     </button>
-    <!-- <button class="btn btn-outline-primary" @click="addRect">
+    <button class="btn btn-outline-primary" @click="addRect">
       四角形を追加
-    </button> -->
+    </button>
     <TemplateEditor />
   </div>
 </template>

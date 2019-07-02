@@ -13,7 +13,7 @@ interface RootState {
 export default new Vuex.Store<RootState>({
   state: {
     drawings: [
-      new RectDrawing({ x: 10, y: 10, width: 100, height: 100, fill: "gray" })
+      // new RectDrawing({ x: 10, y: 10, width: 100, height: 100, fill: "gray" })
     ]
   },
   mutations: {
@@ -21,7 +21,15 @@ export default new Vuex.Store<RootState>({
       drawings.push(new LineDrawing({ x1: 10, y1: 10, x2: 100, y2: 100 }));
     },
     addRect({ drawings }) {
-      drawings.push(new RectDrawing());
+      drawings.push(
+        new RectDrawing({
+          x: 10,
+          y: 10,
+          width: 100,
+          height: 100,
+          fill: "rgba(0, 0, 0, 0.3)"
+        })
+      );
     }
   },
   actions: {}

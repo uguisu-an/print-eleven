@@ -32,109 +32,109 @@ import VHandle from "./VHandle.vue";
   }
 })
 export default class VRectHandle extends Vue {
-  @Prop({ required: true }) rect!: RectDrawing;
+  @Prop({ required: true }) drawing!: RectDrawing;
 
   get leftTop() {
-    return { x: this.rect.x, y: this.rect.y };
+    return { x: this.drawing.x, y: this.drawing.y };
   }
 
   get top() {
-    return { x: this.rect.x + this.rect.width / 2, y: this.rect.y };
+    return { x: this.drawing.x + this.drawing.width / 2, y: this.drawing.y };
   }
 
   get rightTop() {
-    return { x: this.rect.x + this.rect.width, y: this.rect.y };
+    return { x: this.drawing.x + this.drawing.width, y: this.drawing.y };
   }
 
   get right() {
     return {
-      x: this.rect.x + this.rect.width,
-      y: this.rect.y + this.rect.height / 2
+      x: this.drawing.x + this.drawing.width,
+      y: this.drawing.y + this.drawing.height / 2
     };
   }
 
   get rightBottom() {
     return {
-      x: this.rect.x + this.rect.width,
-      y: this.rect.y + this.rect.height
+      x: this.drawing.x + this.drawing.width,
+      y: this.drawing.y + this.drawing.height
     };
   }
 
   get bottom() {
     return {
-      x: this.rect.x + this.rect.width / 2,
-      y: this.rect.y + this.rect.height
+      x: this.drawing.x + this.drawing.width / 2,
+      y: this.drawing.y + this.drawing.height
     };
   }
 
   get leftBottom() {
-    return { x: this.rect.x, y: this.rect.y + this.rect.height };
+    return { x: this.drawing.x, y: this.drawing.y + this.drawing.height };
   }
 
   get left() {
-    return { x: this.rect.x, y: this.rect.y + this.rect.height / 2 };
+    return { x: this.drawing.x, y: this.drawing.y + this.drawing.height / 2 };
   }
 
   handleLeft() {
-    const rect = new Rect(this.rect);
+    const drawing = new Rect(this.drawing);
     this.handle(
-      (x, y) => ({ ...this.rect, ...rect.moveLeft({ x, y }) }),
+      (x, y) => ({ ...this.drawing, ...drawing.moveLeft({ x, y }) }),
       this.left
     );
   }
 
   handleRight() {
-    const rect = new Rect(this.rect);
+    const drawing = new Rect(this.drawing);
     this.handle(
-      (x, y) => ({ ...this.rect, ...rect.moveRight({ x, y }) }),
+      (x, y) => ({ ...this.drawing, ...drawing.moveRight({ x, y }) }),
       this.right
     );
   }
 
   handleTop() {
-    const rect = new Rect(this.rect);
+    const drawing = new Rect(this.drawing);
     this.handle(
-      (x, y) => ({ ...this.rect, ...rect.moveTop({ x, y }) }),
+      (x, y) => ({ ...this.drawing, ...drawing.moveTop({ x, y }) }),
       this.top
     );
   }
 
   handleBottom() {
-    const rect = new Rect(this.rect);
+    const drawing = new Rect(this.drawing);
     this.handle(
-      (x, y) => ({ ...this.rect, ...rect.moveBottom({ x, y }) }),
+      (x, y) => ({ ...this.drawing, ...drawing.moveBottom({ x, y }) }),
       this.bottom
     );
   }
 
   handleLeftTop() {
-    const rect = new Rect(this.rect);
+    const drawing = new Rect(this.drawing);
     this.handle(
-      (x, y) => ({ ...this.rect, ...rect.moveLeftTop({ x, y }) }),
+      (x, y) => ({ ...this.drawing, ...drawing.moveLeftTop({ x, y }) }),
       this.leftTop
     );
   }
 
   handleRightTop() {
-    const rect = new Rect(this.rect);
+    const drawing = new Rect(this.drawing);
     this.handle(
-      (x, y) => ({ ...this.rect, ...rect.moveRightTop({ x, y }) }),
+      (x, y) => ({ ...this.drawing, ...drawing.moveRightTop({ x, y }) }),
       this.rightTop
     );
   }
 
   handleRightBottom() {
-    const rect = new Rect(this.rect);
+    const drawing = new Rect(this.drawing);
     this.handle(
-      (x, y) => ({ ...this.rect, ...rect.moveRightBottom({ x, y }) }),
+      (x, y) => ({ ...this.drawing, ...drawing.moveRightBottom({ x, y }) }),
       this.rightBottom
     );
   }
 
   handleLeftBottom() {
-    const rect = new Rect(this.rect);
+    const drawing = new Rect(this.drawing);
     this.handle(
-      (x, y) => ({ ...this.rect, ...rect.moveLeftBottom({ x, y }) }),
+      (x, y) => ({ ...this.drawing, ...drawing.moveLeftBottom({ x, y }) }),
       this.leftBottom
     );
   }

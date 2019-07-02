@@ -1,7 +1,7 @@
 <template>
   <g>
-    <VRectDrawing :rect="rect" @click="click" />
-    <VRectHandle v-if="selected" :rect="rect" @handle="handle" />
+    <VRectDrawing :drawing="drawing" @click="click" />
+    <VRectHandle v-if="active" :drawing="drawing" @handle="handle" />
   </g>
 </template>
 
@@ -19,15 +19,15 @@ import VRectHandle from "./VRectHandle.vue";
   }
 })
 export default class VRectObject extends Vue {
-  @Prop({ required: true }) rect!: RectDrawing;
-  @Prop({ default: false }) selected!: boolean;
-
-  handle(fn: Function, initial: Point) {
-    this.$emit("movestart", fn, initial);
-  }
+  @Prop({ required: true }) drawing!: RectDrawing;
+  @Prop({ default: false }) active!: boolean;
 
   click(e: MouseEvent) {
     this.$emit("click", e);
+  }
+
+  handle(fn: Function, initial: Point) {
+    this.$emit("scalestart", fn, initial);
   }
 }
 </script>

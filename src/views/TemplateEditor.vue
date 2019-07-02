@@ -1,60 +1,49 @@
 <template>
   <div>
-    {{ selectedObject }}
-    <VLineControl :line="selectedObject" v-if="selectedObject" />
+    <!-- <VLineControl :line="selectedObject" v-if="selectedObject" /> -->
     <v-canvas @mousemove="move" @mouseup="endMove" @mouseleave="cancelMove">
-      <g v-for="(d, i) in drawings" :key="i">
-        <VRectObject
-          :rect="d"
-          :selected="d === selectedObject"
-          @click="selectedObject = d"
-          @movestart="startMove"
-        />
-        <!-- <VLineObject :line="line" @click="select(line)" />
-        <VLineObjectHandle
-          :line="line"
-          @start="startMove"
-          v-if="line === selectedObject"
-        /> -->
-      </g>
+      <VObject
+        v-for="d in drawings"
+        :key="d.id"
+        :drawing="d"
+        :active="isSelected(d)"
+        @click="select(d)"
+        @scalestart="startMove"
+      />
     </v-canvas>
   </div>
 </template>
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
-import VLineControl from "@/components/VLineControl.vue";
-import VLineObject from "@/components/VLineObject.vue";
-import VLineObjectHandle from "@/components/VLineObjectHandle.vue";
-import VRectObject from "@/components/VRectObject.vue";
-import { LineDrawing } from "../models/line-drawing";
 import { Drawing } from "../models/drawing";
-
-type Move = (x: number, y: number) => Drawing;
+import VObject from "../components/VObject.vue";
+import Scale from "../models/scale";
+import Point from "../models/point";
 
 @Component({
   components: {
-    VRectObject,
-    VLineControl,
-    VLineObject,
-    VLineObjectHandle
+    VObject
   }
 })
 export default class TemplateEditor extends Vue {
+  selectedObject: Drawing | null = null;
+  doMove?: Scale;
+  pointCached: Point = { x: 0, y: 0 };
+
   get drawings() {
     return this.$store.state.drawings;
   }
 
-  selectedObject: LineDrawing | null = null;
-
-  select(drawing: LineDrawing) {
+  select(drawing: Drawing) {
     this.selectedObject = drawing;
   }
 
-  doMove?: Move;
-  pointCached = { x: 0, y: 0 };
+  isSelected(drawing: Drawing) {
+    return drawing === this.selectedObject;
+  }
 
-  startMove(move: Move, initial: { x: number; y: number }) {
+  startMove(move: Scale, initial: Point) {
     this.pointCached = initial;
     this.doMove = move;
   }
