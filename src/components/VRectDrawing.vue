@@ -8,6 +8,7 @@
     :stroke="drawing.stroke"
     :stroke-width="drawing.strokeWidth"
     @click="click"
+    @mousedown="mousedown"
   />
 </template>
 
@@ -21,6 +22,10 @@ export default class VRectDrawing extends Vue {
 
   click(e: MouseEvent) {
     this.$emit("click", e);
+  }
+
+  mousedown(e: MouseEvent) {
+    this.$emit("mousedown", e);
   }
 }
 </script>

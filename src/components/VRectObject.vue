@@ -1,6 +1,7 @@
 <template>
   <g>
     <VRectDrawing :drawing="drawing" @click="click" />
+    <VRectHandleTranslate v-if="active" :drawing="drawing" @handle="handle" />
     <VRectHandle v-if="active" :drawing="drawing" @handle="handle" />
   </g>
 </template>
@@ -11,11 +12,13 @@ import Point from "@/models/point";
 import { RectDrawing } from "@/models/rect-drawing";
 import VRectDrawing from "./VRectDrawing.vue";
 import VRectHandle from "./VRectHandle.vue";
+import VRectHandleTranslate from "./VRectHandleTranslate.vue";
 
 @Component({
   components: {
     VRectDrawing,
-    VRectHandle
+    VRectHandle,
+    VRectHandleTranslate
   }
 })
 export default class VRectObject extends Vue {

@@ -16,7 +16,7 @@ import { Prop, Component, Vue } from "vue-property-decorator";
 import { LineDrawing } from "@/models/line-drawing";
 
 @Component({})
-export default class VLineDrawing extends Vue {
+export default class VLineHandleTranslate extends Vue {
   @Prop({ required: true }) drawing!: LineDrawing;
 
   handle(e: MouseEvent) {
@@ -34,10 +34,6 @@ export default class VLineDrawing extends Vue {
       }),
       { x: a, y: b }
     );
-  }
-
-  click(e: MouseEvent) {
-    this.$emit("click", e);
   }
 }
 </script>
