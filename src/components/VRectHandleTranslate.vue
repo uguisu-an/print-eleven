@@ -1,8 +1,12 @@
 <template>
-  <VRectDrawing
-    :drawing="drawing"
-    @mousedown="handle"
+  <rect
     class="rect-handle-translate"
+    :x="drawing.x"
+    :y="drawing.y"
+    :width="drawing.width"
+    :height="drawing.height"
+    fill="transparent"
+    @mousedown="handle"
   />
 </template>
 
@@ -10,13 +14,8 @@
 import { Prop, Component, Vue } from "vue-property-decorator";
 import Point from "@/models/point";
 import { RectDrawing } from "@/models/rect-drawing";
-import VRectDrawing from "./VRectDrawing.vue";
 
-@Component({
-  components: {
-    VRectDrawing
-  }
-})
+@Component
 export default class VRectHandleTranslate extends Vue {
   @Prop({ required: true }) drawing!: RectDrawing;
 
