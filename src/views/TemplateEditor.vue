@@ -9,6 +9,7 @@
         :active="isSelected(d)"
         @click="select(d)"
         @scalestart="startMove"
+        @translatestart="startMove"
       />
     </v-canvas>
   </div>

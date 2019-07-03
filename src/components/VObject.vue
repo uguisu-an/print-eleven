@@ -5,6 +5,7 @@
     :active="active"
     @click="click"
     @scalestart="scalestart"
+    @translatestart="translatestart"
   />
 </template>
 
@@ -15,6 +16,7 @@ import VLineObject from "./VLineObject.vue";
 import VRectObject from "./VRectObject.vue";
 import Point from "@/models/point";
 import Scale from "@/models/scale";
+import Translate from "@/models/translate";
 
 @Component({})
 export default class VObject extends Vue {
@@ -37,6 +39,10 @@ export default class VObject extends Vue {
 
   scalestart(fn: Scale, initial: Point) {
     this.$emit("scalestart", fn, initial);
+  }
+
+  translatestart(fn: Translate, initial: Point) {
+    this.$emit("translatestart", fn, initial);
   }
 
   // translatestart
