@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="line">
+  <div class="container">
     <div class="form-row form-group">
       <label for="x1" class="col-sm-3 col-form-label">x1</label>
       <div class="col-sm-3">
@@ -67,10 +67,10 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
-import { LineObject } from "@/types/object";
+import { LineDrawingInput, LineDrawing } from "@/models/line-drawing";
 
 @Component
 export default class VLineControl extends Vue {
-  @Prop() line?: LineObject;
+  @Prop({ default: () => new LineDrawing() }) line!: LineDrawingInput;
 }
 </script>

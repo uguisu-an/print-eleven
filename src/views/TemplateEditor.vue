@@ -1,123 +1,72 @@
 <template>
   <div>
-    <button class="btn btn-outline-primary rounded-circle" @click="addObject">
-      +
-    </button>
-    <VLineControl :line="selectedObject" v-if="selectedObject" />
+    <!-- <VLineControl :line="selectedObject" v-if="selectedObject" /> -->
     <v-canvas @mousemove="move" @mouseup="endMove" @mouseleave="cancelMove">
-      <!-- <rect
-        v-for="(item, i) in items"
-        :key="i"
-        :x="item.x"
-        :y="item.y"
-        :width="item.width"
-        :height="item.height"
-        stroke="gray"
-        stroke-width="3px"
-      /> -->
-      <g v-for="(line, i) in lines" :key="i">
-        <VLineObject :line="line" @click="select" />
-        <VLineObjectHandle
-          :line="line"
-          @mousedown="movePoint"
-          v-if="line === selectedObject"
-        />
-      </g>
+      <v-object
+        v-for="d in drawings"
+        :key="d.id"
+        :drawing="d"
+        :active="isSelected(d)"
+        @click="select(d)"
+        @scalestart="startMove"
+        @translatestart="startMove"
+      />
     </v-canvas>
   </div>
 </template>
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
-import { LineObject } from "@/types/object";
-import VLineControl from "@/components/VLineControl.vue";
-import VLineObject from "@/components/VLineObject.vue";
-import VLineObjectHandle from "@/components/VLineObjectHandle.vue";
+import { Drawing } from "@/models/drawing";
+import Scale from "@/models/scale";
+import Point from "@/models/point";
+import VCanvas from "@/components/VCanvas.vue";
+import VObject from "@/components/VObject.vue";
 
 @Component({
   components: {
-    VLineControl,
-    VLineObject,
-    VLineObjectHandle
+    "v-canvas": VCanvas,
+    "v-object": VObject
   }
 })
 export default class TemplateEditor extends Vue {
-  // items: BoundingBox[] = [];
-  lines: LineObject[] = [];
+  selectedObject: Drawing | null = null;
+  doMove?: Scale;
+  pointCached: Point = { x: 0, y: 0 };
 
-  selectedObject: LineObject | null = null;
-
-  addObject() {
-    this.lines.push({
-      x1: 10 * this.lines.length,
-      y1: 10,
-      x2: 100 + 15 * this.lines.length,
-      y2: 100,
-      stroke: "gray",
-      strokeWidth: 3
-    });
-    this.selectedObject = this.lines.slice(-1)[0];
-    // this.items.push({
-    //   x: 10 * this.items.length,
-    //   y: 100 * this.items.length,
-    //   width: 400,
-    //   height: 200
-    // });
+  get drawings() {
+    return this.$store.state.drawings;
   }
 
-  select(_e: MouseEvent, line: LineObject) {
-    this.selectedObject = line;
+  select(drawing: Drawing) {
+    this.selectedObject = drawing;
   }
 
-  moveType = "";
-  pointCached = { x: 0, y: 0 };
-
-  movePoint(_e: MouseEvent, p: "start" | "end") {
-    if (p === "start") {
-      this.moveStartPoint();
-    } else {
-      this.moveEndPoint();
-    }
+  isSelected(drawing: Drawing) {
+    return drawing === this.selectedObject;
   }
 
-  moveStartPoint() {
-    if (!this.selectedObject) return;
-    this.moveType = "start";
-    this.pointCached = { x: this.selectedObject.x1, y: this.selectedObject.y1 };
-  }
-
-  moveEndPoint() {
-    if (!this.selectedObject) return;
-    this.moveType = "end";
-    this.pointCached = { x: this.selectedObject.x2, y: this.selectedObject.y2 };
+  startMove(move: Scale, initial: Point) {
+    this.pointCached = initial;
+    this.doMove = move;
   }
 
   move(e: MouseEvent) {
     if (!this.selectedObject) return;
-    if (this.moveType === "start") {
-      this.selectedObject.x1 = e.offsetX;
-      this.selectedObject.y1 = e.offsetY;
-    } else if (this.moveType === "end") {
-      this.selectedObject.x2 = e.offsetX;
-      this.selectedObject.y2 = e.offsetY;
-    }
+    if (!this.doMove) return;
+    Object.assign(this.selectedObject, this.doMove(e.offsetX, e.offsetY));
   }
 
   endMove() {
-    if (!this.selectedObject) return;
-    this.moveType = "";
+    delete this.doMove;
   }
 
   cancelMove() {
     if (!this.selectedObject) return;
-    if (this.moveType === "start") {
-      this.selectedObject.x1 = this.pointCached.x;
-      this.selectedObject.y1 = this.pointCached.y;
-    } else if (this.moveType === "end") {
-      this.selectedObject.x2 = this.pointCached.x;
-      this.selectedObject.y2 = this.pointCached.y;
-    }
-    this.moveType = "";
+    if (!this.doMove) return;
+    const { x, y } = this.pointCached;
+    Object.assign(this.selectedObject, this.doMove(x, y));
+    delete this.doMove;
   }
 }
 </script>
